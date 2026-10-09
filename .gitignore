@@ -1,0 +1,5 @@
+/target/
+android/libs/*.aar
+guest-js/dist/
+node_modules/
+.DS_Store
