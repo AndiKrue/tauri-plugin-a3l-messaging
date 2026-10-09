@@ -1,0 +1,9 @@
+[default]
+description = "Allows the complete A3L Messaging command surface"
+permissions = [
+  "allow-get-token",
+  "allow-get-current-platform",
+  "allow-subscribe-to-topic",
+  "allow-unsubscribe-from-topic",
+  "allow-drain-pending-events",
+]
