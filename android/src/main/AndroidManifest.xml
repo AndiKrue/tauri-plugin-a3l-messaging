@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application>
+        <receiver
+            android:name="com.andikrue.tauri.a3lmessaging.A3LTauriMessagingService"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.amazon.A3L.messaging.intent.REGISTRATION" />
+                <action android:name="com.amazon.A3L.messaging.intent.MESSAGE" />
+            </intent-filter>
+        </receiver>
+
+        <meta-data
+            android:name="com.a3l.clsName"
+            android:value="com.andikrue.tauri.a3lmessaging.A3LTauriMessagingService" />
+    </application>
+</manifest>
