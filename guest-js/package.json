@@ -1,0 +1,22 @@
+{
+  "name": "@andikrue/tauri-plugin-a3l-messaging-api",
+  "version": "0.1.0",
+  "description": "Typed JavaScript API for tauri-plugin-a3l-messaging",
+  "type": "module",
+  "private": true,
+  "sideEffects": false,
+  "main": "./src/index.js",
+  "types": "./src/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "import": "./src/index.js"
+    }
+  },
+  "scripts": {
+    "test": "node --test ./tests/*.test.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
