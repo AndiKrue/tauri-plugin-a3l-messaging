@@ -2,7 +2,7 @@
 name = "tauri-plugin-a3l-messaging"
 version = "0.1.0"
 edition = "2021"
-rust-version = "1.77.2"
+rust-version = "1.90"
 description = "Amazon A3L Messaging bridge for Tauri 2 on Android and Fire OS"
 license = "MIT"
 repository = "https://github.com/AndiKrue/tauri-plugin-a3l-messaging"
@@ -14,10 +14,10 @@ crate-type = ["lib", "cdylib", "staticlib"]
 
 [dependencies]
 serde = { version = "1.0", features = ["derive"] }
-tauri = { version = "=2.11.5" }
+tauri = { version = "=2.12.2" }
 
 [build-dependencies]
-tauri-plugin = { version = "=2.6.3", features = ["build"] }
+tauri-plugin = { version = "=2.7.0", features = ["build"] }
 
 [profile.release]
 lto = true
