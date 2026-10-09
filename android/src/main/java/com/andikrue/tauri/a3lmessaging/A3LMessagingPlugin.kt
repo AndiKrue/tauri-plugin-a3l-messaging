@@ -43,7 +43,7 @@ class A3LMessagingPlugin(private val hostActivity: Activity) : Plugin(hostActivi
     @Command
     fun getCurrentPlatform(invoke: Invoke) {
         try {
-            val platform = A3LMessaging.getCurrentPlatform()
+            val platform = A3LMessaging.getCurrentPlatform(hostActivity.applicationContext)
             invoke.resolve(
                 statusResult("success").apply {
                     put("platform", platform ?: "unknown")
