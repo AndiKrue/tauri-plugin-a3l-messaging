@@ -1,31 +1,33 @@
 package com.andikrue.tauri.a3lmessaging
 
+import android.content.Context
 import com.amazon.A3L.messaging.RemoteMessage
 import org.json.JSONArray
 import org.json.JSONObject
-import java.util.ArrayDeque
 
 internal object PendingEventStore {
+    private const val PREFS = "tauri_a3l_messaging"
+    private const val KEY_EVENTS = "pending_events_v1"
     private const val MAX_EVENTS = 100
     private val lock = Any()
-    private val events = ArrayDeque<JSONObject>()
 
-    fun addToken(token: String) {
+    fun addToken(context: Context, token: String) {
         add(
+            context,
             JSONObject()
                 .put("type", "token")
                 .put("token", token),
         )
     }
 
-    fun addMessage(message: RemoteMessage) {
+    fun addMessage(context: Context, message: RemoteMessage): JSONObject {
         val notification = message.notification
         val data = JSONObject()
         message.data.entries.sortedBy { it.key }.forEach { (key, value) ->
             data.put(key, value)
         }
 
-        add(
+        val event =
             JSONObject()
                 .put("type", "message")
                 .put("platform", message.remoteMessageType ?: "unknown")
@@ -35,25 +37,51 @@ internal object PendingEventStore {
                 .put("ttlSeconds", message.ttl)
                 .put("data", data)
                 .put("notificationTitle", notification?.title)
-                .put("notificationBody", notification?.body),
-        )
+                .put("notificationBody", notification?.body)
+
+        add(context, event)
+        return event
     }
 
-    private fun add(event: JSONObject) {
-        synchronized(lock) {
-            while (events.size >= MAX_EVENTS) {
-                events.removeFirst()
-            }
-            events.addLast(event)
+    private fun preferences(context: Context) =
+        context.applicationContext.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+
+    private fun read(context: Context): MutableList<JSONObject> {
+        val encoded = preferences(context).getString(KEY_EVENTS, null) ?: return mutableListOf()
+        return try {
+            val array = JSONArray(encoded)
+            MutableList(array.length()) { index -> array.getJSONObject(index) }
+        } catch (_: Exception) {
+            mutableListOf()
         }
     }
 
-    fun drain(): JSONArray {
+    private fun write(context: Context, events: List<JSONObject>) {
+        val array = JSONArray()
+        events.forEach(array::put)
+        preferences(context)
+            .edit()
+            .putString(KEY_EVENTS, array.toString())
+            .apply()
+    }
+
+    private fun add(context: Context, event: JSONObject) {
         synchronized(lock) {
-            val result = JSONArray()
-            while (events.isNotEmpty()) {
-                result.put(events.removeFirst())
+            val events = read(context)
+            events.add(event)
+            while (events.size > MAX_EVENTS) {
+                events.removeAt(0)
             }
+            write(context, events)
+        }
+    }
+
+    fun drain(context: Context): JSONArray {
+        synchronized(lock) {
+            val events = read(context)
+            preferences(context).edit().remove(KEY_EVENTS).apply()
+            val result = JSONArray()
+            events.forEach(result::put)
             return result
         }
     }

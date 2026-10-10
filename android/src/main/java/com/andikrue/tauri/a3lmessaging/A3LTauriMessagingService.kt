@@ -6,10 +6,11 @@ import com.amazon.A3L.messaging.RemoteMessage
 
 class A3LTauriMessagingService : A3LMessagingService() {
     override fun onMessageReceived(context: Context, remoteMessage: RemoteMessage) {
-        PendingEventStore.addMessage(remoteMessage)
+        PendingEventStore.addMessage(context, remoteMessage)
+        LocalNotificationRouter.maybeNotify(context, remoteMessage)
     }
 
     override fun onNewToken(context: Context, token: String) {
-        PendingEventStore.addToken(token)
+        PendingEventStore.addToken(context, token)
     }
 }

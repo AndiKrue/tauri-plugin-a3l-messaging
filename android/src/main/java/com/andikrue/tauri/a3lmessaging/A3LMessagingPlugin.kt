@@ -16,6 +16,10 @@ internal class TopicArgs {
 
 @TauriPlugin
 class A3LMessagingPlugin(private val hostActivity: Activity) : Plugin(hostActivity) {
+    init {
+        AppVisibility.install(hostActivity)
+    }
+
     @Command
     fun getToken(invoke: Invoke) {
         A3LMessaging.getToken().addOnCompleteListener { task ->
@@ -100,7 +104,7 @@ class A3LMessagingPlugin(private val hostActivity: Activity) : Plugin(hostActivi
     fun drainPendingEvents(invoke: Invoke) {
         invoke.resolve(
             statusResult("success").apply {
-                put("events", PendingEventStore.drain())
+                put("events", PendingEventStore.drain(hostActivity.applicationContext))
             },
         )
     }
