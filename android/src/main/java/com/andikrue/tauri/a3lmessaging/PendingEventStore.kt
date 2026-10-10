@@ -58,7 +58,7 @@ internal object PendingEventStore {
 
     private fun write(context: Context, events: List<JSONObject>) {
         val array = JSONArray()
-        events.forEach(array::put)
+        events.forEach { event -> array.put(event) }
         preferences(context)
             .edit()
             .putString(KEY_EVENTS, array.toString())
@@ -81,7 +81,7 @@ internal object PendingEventStore {
             val events = read(context)
             preferences(context).edit().remove(KEY_EVENTS).apply()
             val result = JSONArray()
-            events.forEach(result::put)
+            events.forEach { event -> result.put(event) }
             return result
         }
     }

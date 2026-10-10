@@ -64,9 +64,7 @@ internal object LocalNotificationRouter {
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
             )
 
-        val smallIcon =
-            context.applicationInfo.icon.takeIf { it != 0 }
-                ?: android.R.drawable.ic_dialog_info
+        val smallIcon = R.drawable.tauri_a3l_notification
 
         val builder =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
