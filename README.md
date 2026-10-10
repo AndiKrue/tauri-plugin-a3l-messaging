@@ -38,6 +38,19 @@ persisted message is then available through the existing `drainPendingEvents()` 
 The plugin intentionally never uses a full-screen intent and never force-opens the consumer Activity on
 message receipt.
 
+When A3L/ADM omits `messageId`, `sentTime`, and sender on a data push, the
+notification ID is derived from the product-neutral canonical payload rather than
+the constant legacy `"0:"` fallback (whose Kotlin hash is `1546`). This keeps
+distinct deliveries from replacing the same notification and inadvertently
+suppressing subsequent alerts under `setOnlyAlertOnce(true)`. True duplicates
+with an identical payload still update the same notification; completely
+metadata-free messages receive a fresh random identity. SDK message IDs still
+take precedence when present.
+
+JVM unit coverage lives in `android/src/test/`; executing it requires an
+Android Gradle host environment and the Amazon A3L SDK artifact (the SDK is
+not included in this repository).
+
 ## Amazon SDK prerequisite
 
 Amazon currently distributes A3L Messaging as an AAR. **The AAR is not vendored in this repository.**
