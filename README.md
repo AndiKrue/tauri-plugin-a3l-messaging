@@ -24,19 +24,16 @@ can be added without changing the V1 command contract.
 ## Amazon SDK prerequisite
 
 Amazon currently distributes A3L Messaging as an AAR. **The AAR is not vendored in this repository.**
-Download A3L Messaging 1.1.1 from Amazon's official SDK page and copy:
+Download A3L Messaging 1.1.1 from Amazon's official SDK page. Consumer applications should point
+the build at the SDK without copying it into this Git repository:
 
-```text
-A3LMessaging-1.1.1.aar
+```powershell
+$env:A3L_MESSAGING_AAR = 'C:\Tools\amazon-a3l\A3LMessaging-1.1.1.aar'
 ```
 
-to:
+For local plugin development, `android/libs/A3LMessaging-1.1.1.aar` remains the fallback path.
 
-```text
-android/libs/A3LMessaging-1.1.1.aar
-```
-
-The path is ignored by Git so this repository does not silently redistribute Amazon's SDK.
+The fallback path is ignored by Git so this repository does not silently redistribute Amazon's SDK.
 
 The Android module follows Amazon's current setup guidance and includes Firebase Messaging `23.0.0`
 because A3L uses FCM on Android and ADM on Fire OS.
