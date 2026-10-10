@@ -8,7 +8,6 @@ import android.content.Context
 import android.graphics.Color
 import android.os.Build
 import com.amazon.A3L.messaging.RemoteMessage
-import kotlin.math.absoluteValue
 
 internal object LocalNotificationRouter {
     private const val ENABLED = "_a3l_tauri_notify"
@@ -54,8 +53,12 @@ internal object LocalNotificationRouter {
             )
             .putExtra("tauri_a3l_message_id", message.messageId)
 
-        val identity = message.messageId ?: (message.sentTime.toString() + ":" + (message.from ?: ""))
-        val notificationId = identity.hashCode().absoluteValue.coerceAtLeast(1)
+        val notificationId = NotificationIdentity.forMessage(
+            message.messageId,
+            message.sentTime,
+            message.from,
+            message.data,
+        )
         val pendingIntent =
             PendingIntent.getActivity(
                 context,
