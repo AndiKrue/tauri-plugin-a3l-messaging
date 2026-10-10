@@ -46,4 +46,5 @@ dependencies {
     implementation(files(a3lAar))
     // Amazon's A3L 1.1.1 setup documentation requires this dependency for Android/FCM.
     implementation("com.google.firebase:firebase-messaging:23.0.0")
+    testImplementation("junit:junit:4.13.2")
 }
