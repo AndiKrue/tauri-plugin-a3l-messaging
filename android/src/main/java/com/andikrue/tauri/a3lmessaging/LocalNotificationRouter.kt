@@ -87,8 +87,9 @@ internal object LocalNotificationRouter {
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             @Suppress("DEPRECATION")
-            builder.priority =
-                if (urgency == "low") Notification.PRIORITY_LOW else Notification.PRIORITY_HIGH
+            builder.setPriority(
+                if (urgency == "low") Notification.PRIORITY_LOW else Notification.PRIORITY_HIGH,
+            )
         }
 
         notificationManager.notify(notificationId, builder.build())
