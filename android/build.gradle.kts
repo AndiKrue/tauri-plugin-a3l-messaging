@@ -22,11 +22,21 @@ android {
     }
 }
 
-val a3lAar = file("libs/A3LMessaging-1.1.1.aar")
+val configuredA3lAar = providers
+    .gradleProperty("A3L_MESSAGING_AAR")
+    .orElse(providers.environmentVariable("A3L_MESSAGING_AAR"))
+
+val a3lAar = if (configuredA3lAar.isPresent) {
+    file(configuredA3lAar.get())
+} else {
+    file("libs/A3LMessaging-1.1.1.aar")
+}
+
 if (!a3lAar.exists()) {
-    logger.warn(
+    throw GradleException(
         "A3L Messaging SDK not found at ${a3lAar}. " +
-        "Download A3L Messaging 1.1.1 from Amazon before building Android/Fire OS."
+        "Set A3L_MESSAGING_AAR to Amazon's A3LMessaging-1.1.1.aar " +
+        "or place it in android/libs for local plugin development."
     )
 }
 
