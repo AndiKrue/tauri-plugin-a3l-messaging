@@ -68,6 +68,22 @@ JVM unit coverage lives in `android/src/test/`; executing it requires an
 Android Gradle host environment and the Amazon A3L SDK artifact (the SDK is
 not included in this repository).
 
+## Unattended debug-APK WebView acceptance
+
+Fire TV QA can use device-scoped ADB plus Chrome DevTools Protocol to drive
+**actual WebView buttons**, without bypassing the native notification or sending
+approval requests directly to the server. Some older Fire OS WebViews do not
+automatically expose their debug socket. The Android plugin therefore calls
+`WebView.setWebContentsDebuggingEnabled(true)` **only when**
+`ApplicationInfo.FLAG_DEBUGGABLE` is present. This enables debug-APK QA
+and does not affect release/store builds.
+
+**Security:** Never enable this feature unconditionally: ADB DevTools can
+inspect local authority state, tokens, and WebView content. Production apps
+must be non-debuggable. Android unit tests cover both sides of this policy.
+The QA harness must also verify that the actively running edge is an isolated
+mock backend before clicking Approve or Decline.
+
 ## Amazon SDK prerequisite
 
 Amazon currently distributes A3L Messaging as an AAR. **The AAR is not vendored in this repository.**
