@@ -47,6 +47,23 @@ with an identical payload still update the same notification; completely
 metadata-free messages receive a fresh random identity. SDK message IDs still
 take precedence when present.
 
+### Fire TV heads-up compatibility
+
+Amazon's [Fire TV notifications documentation](https://developer.amazon.com/docs/fire-tv/notifications.html)
+specifies `Notification.PRIORITY_HIGH` for heads-up overlays. The local
+notification router therefore sets this per-notification priority for
+`attention` and `urgent` on **every API level**, including Fire OS 8/API 30;
+`low` retains `PRIORITY_LOW`. Android 8+ notification channels still use
+`IMPORTANCE_HIGH` for attention/urgent. Setting both is a compatibility measure
+and **does not guarantee** Fire OS renders a heads-up card when the user/device
+suppresses them.
+
+An Ask First Fire TV capture previously confirmed native posting but identified
+only an animated Home carousel as the strongest visual candidate, not the
+notification banner. Validate the exact physical device's popup separately from
+successful ADM HTTP submission, and do not equate a visible entry in the
+Notification Center with a heads-up acceptance PASS.
+
 JVM unit coverage lives in `android/src/test/`; executing it requires an
 Android Gradle host environment and the Amazon A3L SDK artifact (the SDK is
 not included in this repository).
