@@ -18,6 +18,9 @@ internal class TopicArgs {
 class A3LMessagingPlugin(private val hostActivity: Activity) : Plugin(hostActivity) {
     init {
         AppVisibility.install(hostActivity)
+        // ADB/CDP inspection is a debug-APK QA capability only.
+        // Store/release builds MUST NOT enable WebView debugging.
+        DebugWebViewPolicy.configure(hostActivity)
     }
 
     @Command
