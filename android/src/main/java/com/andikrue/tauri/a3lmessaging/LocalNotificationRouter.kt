@@ -88,15 +88,18 @@ internal object LocalNotificationRouter {
             .setColor(colorFor(urgency))
             .addAction(smallIcon, actionLabel, pendingIntent)
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-            @Suppress("DEPRECATION")
-            builder.setPriority(
-                if (urgency == "low") Notification.PRIORITY_LOW else Notification.PRIORITY_HIGH,
-            )
-        }
+        // Fire TV documents PRIORITY_HIGH for heads-up presentation.
+        // On API 26+, channel importance remains authoritative on standard
+        // Android, but also retain the per-notification priority signal for
+        // Fire OS compatibility. Never promote a low-urgency notification.
+        @Suppress("DEPRECATION")
+        builder.setPriority(priorityFor(urgency))
 
         notificationManager.notify(notificationId, builder.build())
     }
+
+    internal fun priorityFor(urgency: String): Int =
+        if (urgency == "low") Notification.PRIORITY_LOW else Notification.PRIORITY_HIGH
 
     private fun ensureChannel(
         manager: NotificationManager,
